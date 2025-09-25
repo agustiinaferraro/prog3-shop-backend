@@ -3,6 +3,11 @@ import express from "express";
 import cors from "cors";
 import indexRoutes from "./routes/index.js";
 import productsRoutes from "./routes/products.js";
+import categoriesRoutes from "./routes/categories.js";
+import toursRoutes from "./routes/tours.js";
+import createError from "http-errors";
+import fanartRoutes from "./routes/fanart.js";
+
 
 /* Clear the console  */
 console.log("\x1Bc");
@@ -37,6 +42,10 @@ app.use(
 /* Routes */
 app.use("/", indexRoutes);
 app.use("/products", productsRoutes);
+app.use("/categories", categoriesRoutes);
+app.use("/tours", toursRoutes);
+app.use("/fanart", fanartRoutes);
+
 
 /* Error handler  */
 // catch 404 and forward to error handler
