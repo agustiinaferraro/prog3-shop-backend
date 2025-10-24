@@ -9,7 +9,7 @@ const findAllFanarts = async (req, res) => {
     const fanarts = await Fanart.find().select("_id image artist");
     return res.status(200).send({ message: "Todos los fanarts", fanarts });
   } catch (error) {
-    return res.status(501).send({ message: "Hubo un error", error });
+    return res.status(500).send({ message: "Hubo un error", error });
   }
 };
 
@@ -35,7 +35,7 @@ const addFanart = async (req, res) => {
     await fanart.save();
     return res.status(201).send({ message: "Fanart creado", fanart });
   } catch (error) {
-    return res.status(501).send({ message: "Hubo un error", error });
+    return res.status(500).send({ message: "Hubo un error", error });
   }
 };
 
@@ -61,17 +61,20 @@ const updateFanart = async (req, res) => {
   }
 };
 
-// Actualiza varios fanarts a la vez (por ejemplo para reemplazar links)
+// Actualiza varios fanarts a la vez (PUT masivo)
 const updateManyFanarts = async (req, res) => {
-  const { updates } = req.body; 
-  // updates = [{ _id, image }, {_id, image }, ...]
+  const { updates } = req.body; // espero un array de objetos { _id, image, artist }
+
+  if (!Array.isArray(updates)) {
+    return res.status(400).send({ message: "Formato inválido, 'updates' debe ser un array" });
+  }
 
   try {
     const results = [];
     for (let update of updates) {
       const updated = await Fanart.findByIdAndUpdate(
         update._id,
-        { image: update.image },
+        { image: update.image, artist: update.artist },
         { new: true }
       );
       if (updated) results.push(updated);
@@ -87,6 +90,6 @@ router.get("/", findAllFanarts);
 router.get("/:id", findFanartById);
 router.post("/", addFanart);
 router.put("/:id", updateFanart);
-router.put("/", updateManyFanarts); // PUT masivo para cambiar varios links a la vez
+router.put("/", updateManyFanarts); // PUT masivo para actualizar varios fanarts a la vez
 
 export default router;

@@ -1,13 +1,17 @@
 // models/Product.js
 import mongoose from "mongoose";
-const { Schema } = mongoose
+const { Schema } = mongoose;
 
+// Schema de variantes con price
 const variantSchema = new mongoose.Schema({
   color: { type: String, required: true },
   image: { type: String, required: true },
-  sizes: [{ type: String, required: true }] // Array de talles
+  sizes: [{ type: String, required: true }], // Array de talles
+  price: { type: Number, required: true },
+  logo: { type: String }
 });
 
+// Schema de producto
 const productSchema = new mongoose.Schema({
   categories: [{ type: Schema.Types.ObjectId, ref: "Category" }],
   title: { type: String, required: true },

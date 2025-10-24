@@ -5,16 +5,17 @@ import indexRoutes from "./routes/index.js";
 import productsRoutes from "./routes/products.js";
 import categoriesRoutes from "./routes/categories.js";
 import toursRoutes from "./routes/tours.js";
-import createError from "http-errors";
 import fanartRoutes from "./routes/fanart.js";
-
+import createError from "http-errors";
+import path from "path";
+import checkoutRoutes from "./routes/checkout.js";
 
 /* Clear the console  */
 console.log("\x1Bc");
 
 const app = express();
 
-// DB Connection
+/* DB Connection */
 import { connectDb } from "./db.js";
 connectDb();
 
@@ -39,15 +40,18 @@ app.use(
   })
 );
 
+/* Servir imágenes estáticas desde public/img */
+app.use('/img', express.static(path.join(path.resolve(), 'public/img')));
+
 /* Routes */
 app.use("/", indexRoutes);
 app.use("/products", productsRoutes);
 app.use("/categories", categoriesRoutes);
 app.use("/tours", toursRoutes);
 app.use("/fanart", fanartRoutes);
+app.use("/checkout", checkoutRoutes);
 
-
-/* Error handler  */
+/* Error handler */
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
